@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -47,7 +48,7 @@ class UsersController extends Controller
         $user->name =  $request->input('nom');
         $user->email = $request->input('email');
         $user->date_de_naissance = $request->input('date_naissance');
-        $user->password =  $request->input('mdp');
+        $user->password =  Hash::make($request->input('mdp'));
         $user->save();
 
         return redirect()->route('users.index')->with('message','user modifié');
@@ -65,13 +66,12 @@ class UsersController extends Controller
             'email'=>'required',
             'date_naissance'=>'required',
             'mdp'=>'required|min:8|confirmed',
-
         ]);
 
         User::create([
             'name' => $request->input('nom'),
             'email' => $request->input('email'),
-            'password' => $request->input('mdp'),
+            'password' => Hash::make($request->input('mdp')),
             'date_de_naissance' => $request->input('date_naissance'),
         ]);
 
